@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# 更新日志
+# CHANGELOG
 
 所有项目的更改都将记录在此文件中。
 
@@ -9,84 +8,35 @@
 ## [未发布]
 
 ### 计划中
-- 添加更多功能
-- 性能优化
-- 文档完善
+- 数据上传功能
+- 统计分析前端集成
+- Lancet标准输出前端展示
+- 投稿包生成和下载
+- 论文编辑器
+- 文献管理界面
+- 交互式世界地图
 
-## [1.0.0] - 2024-01-01
+## [2.0.0] - 2026-04-27
+
+### 新增
+- 项目架构重建：FastAPI后端 + HTML SPA前端
+- 统计分析引擎（KM/Cox/Fine-Gray）
+- Lancet标准表格和图形生成
+- 投稿包一键打包下载
+- 论文自动撰写（Lancet格式）
+- PubMed文献检索集成
+
+### 变更
+- 从Manus平台迁移为本地可运行架构
+- 技术栈统一为Python FastAPI + 原生HTML/CSS/JS
+
+## [1.0.0] - 2026-01-25
 
 ### 新增
 - 初始版本发布
-- 基础功能实现
-- API接口完成
-- 文档编写
-- 测试用例添加
-
-### 修复
-- 初始版本，无修复记录
-
-### 变更
-- 初始版本，无变更记录
-
-### 移除
-- 初始版本，无移除记录
-
----
-
-## 版本说明
-
-### 版本号格式
-
-本项目使用语义化版本号：`主版本号.次版本号.修订号`
-
-- **主版本号**：当你做了不兼容的 API 修改
-- **次版本号**：当你做了向下兼容的功能性新增
-- **修订号**：当你做了向下兼容的问题修正
-
-### 发布周期
-
-- **主版本**：重大功能更新或架构变更
-- **次版本**：新功能发布，每月1-2次
-- **修订版**：Bug修复，根据需要发布
-
-### 支持版本
-
-| 版本 | 支持状态 | 说明 |
-|------|----------|------|
-| 1.0.x | ✅ 支持 | 当前稳定版本 |
-| < 1.0 | ❌ 不支持 | 旧版本，请升级 |
-
----
-
-## 贡献
-
-欢迎提交 Pull Request 来完善更新日志。请遵循以下格式：
-
-```markdown
-## [版本号] - YYYY-MM-DD
-
-### 新增
-- 新功能描述
-
-### 修复
-- Bug修复描述
-
-### 变更
-- 变更描述
-
-### 移除
-- 移除功能描述
-```
-
-## 链接
-
-- [GitHub Releases](https://github.com/MoKangMedical/global-aging-data-to-lancet-global-health/releases)
-- [GitHub Issues](https://github.com/MoKangMedical/global-aging-data-to-lancet-global-health/issues)
-- [GitHub Pull Requests](https://github.com/MoKangMedical/global-aging-data-to-lancet-global-health/pulls)
-=======
-# CHANGELOG
-
-## 2026-04-22 — Hermes改进
-- 📐 理论标准化（Harness+红杉+宪法）
-- 🔒 安全规则补全（.gitignore）
->>>>>>> b7be0d5 (Hermes: global-aging-data-to-lancet-global-health - CHANGELOG/README补全)
+- React + tRPC全栈架构（Manus平台）
+- PICO框架自动分析
+- 文件上传和文本提取
+- Global Aging Data数据集展示
+- Lancet配色方案
+- 交互式HRS图表
