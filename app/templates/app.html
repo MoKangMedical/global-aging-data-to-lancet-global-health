@@ -1,0 +1,3611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Aging Data to Lancet Global Health</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ============================================
+           CSS RESET & BASE STYLES
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #A51C30;
+            --primary-dark: #8A1726;
+            --primary-light: #C4223D;
+            --secondary: #4A5F8C;
+            --secondary-dark: #3D5078;
+            --secondary-light: #5A71A0;
+            --accent: #E67E22;
+            --accent-dark: #D35400;
+            --accent-light: #F39C12;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8F9FA;
+            --bg-tertiary: #EDF0F5;
+            --text-primary: #1A1A2E;
+            --text-secondary: #4A4A6A;
+            --text-muted: #8888A0;
+            --border-color: #E0E4EC;
+            --border-light: #F0F2F5;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --nav-height: 64px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ============================================
+           NAVIGATION BAR
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            color: #fff;
+            letter-spacing: 0.5px;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: var(--transition);
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.1);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .nav-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-title span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 8px 20px;
+            color: rgba(255,255,255,0.75);
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background: var(--primary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-settings {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .nav-settings:hover {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+
+        .nav-settings svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ============================================
+           MAIN CONTENT AREA
+           ============================================ */
+        .main-content {
+            margin-top: var(--nav-height);
+            min-height: calc(100vh - var(--nav-height));
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+            color: rgba(255,255,255,0.6);
+            padding: 48px 32px 32px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .footer-brand span {
+            color: var(--primary-light);
+        }
+
+        .footer-powered {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 6px;
+        }
+
+        .footer-powered a {
+            color: var(--accent);
+        }
+
+        .footer-divider {
+            width: 60px;
+            height: 2px;
+            background: var(--primary);
+            margin: 20px auto;
+            border-radius: 1px;
+        }
+
+        .footer-copy {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            margin-top: 16px;
+        }
+
+        /* ============================================
+           HOME PAGE
+           ============================================ */
+        .hero {
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 40%, #0F3460 100%);
+            padding: 100px 32px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, rgba(165,28,48,0.08) 0%, transparent 70%);
+            animation: heroGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, 5%); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 20px;
+            background: rgba(165,28,48,0.2);
+            border: 1px solid rgba(165,28,48,0.4);
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-light);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero h1 .highlight {
+            color: var(--accent);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: rgba(255,255,255,0.65);
+            font-weight: 400;
+            margin-bottom: 48px;
+            letter-spacing: 0.3px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-stat {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            padding: 24px 16px;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .hero-stat:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .hero-stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .hero-stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Features Section */
+        .section {
+            padding: 80px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .feature-icon.upload { background: rgba(165,28,48,0.1); color: var(--primary); }
+        .feature-icon.pico { background: rgba(74,95,140,0.1); color: var(--secondary); }
+        .feature-icon.stats { background: rgba(230,126,34,0.1); color: var(--accent); }
+        .feature-icon.output { background: rgba(165,28,48,0.1); color: var(--primary); }
+        .feature-icon.manuscript { background: rgba(74,95,140,0.1); color: var(--secondary); }
+        .feature-icon.submit { background: rgba(230,126,34,0.1); color: var(--accent); }
+
+        .feature-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Workflow Section */
+        .workflow-section {
+            background: var(--bg-primary);
+            padding: 80px 32px;
+        }
+
+        .workflow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .workflow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+            position: relative;
+        }
+
+        .workflow-number {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .workflow-step:nth-child(1) .workflow-number { background: var(--primary); }
+        .workflow-step:nth-child(2) .workflow-number { background: var(--secondary); }
+        .workflow-step:nth-child(3) .workflow-number { background: var(--accent); }
+        .workflow-step:nth-child(4) .workflow-number { background: var(--primary); }
+
+        .workflow-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .workflow-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 150px;
+        }
+
+        .workflow-arrow {
+            flex: 0 0 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--border-color);
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Dataset Section */
+        .datasets-section {
+            padding: 80px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .datasets-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .dataset-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .dataset-card:hover {
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .dataset-abbr {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .dataset-name {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .dataset-country {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* ============================================
+           DASHBOARD PAGE
+           ============================================ */
+        .dashboard-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(165,28,48,0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74,95,140,0.3);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-accent:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-sm {
+            padding: 6px 16px;
+            font-size: 13px;
+        }
+
+        .btn-lg {
+            padding: 14px 32px;
+            font-size: 16px;
+        }
+
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-muted);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .project-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .project-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .project-type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-cohort { background: rgba(165,28,48,0.1); color: var(--primary); }
+        .badge-cross { background: rgba(74,95,140,0.1); color: var(--secondary); }
+        .badge-case { background: rgba(230,126,34,0.1); color: var(--accent); }
+        .badge-meta { background: rgba(46,139,87,0.1); color: #2E8B57; }
+
+        .project-card-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .project-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .project-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-active .status-dot { background: #2ECC71; }
+        .status-active { color: #2ECC71; }
+        .status-completed .status-dot { background: var(--secondary); }
+        .status-completed { color: var(--secondary); }
+        .status-draft .status-dot { background: var(--accent); }
+        .status-draft { color: var(--accent); }
+
+        .project-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           NEW PROJECT PAGE
+           ============================================ */
+        .new-project-page {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+
+        .form-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-family: inherit;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(165,28,48,0.1);
+            background: var(--bg-primary);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888A0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 32px;
+        }
+
+        /* ============================================
+           PROJECT DETAIL PAGE
+           ============================================ */
+        .project-detail-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+
+        .project-header {
+            margin-bottom: 32px;
+        }
+
+        .project-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 32px;
+            gap: 4px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 14px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Overview Tab */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .overview-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+        }
+
+        .overview-card-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .overview-card-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .overview-card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .info-section {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .info-section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Upload Tab */
+        .upload-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 60px 40px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            background: var(--bg-secondary);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(165,28,48,0.03);
+        }
+
+        .upload-zone-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            background: rgba(165,28,48,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .upload-zone h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .upload-zone p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .file-list {
+            margin-top: 24px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+        }
+
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(165,28,48,0.1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .extracted-text {
+            margin-top: 24px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+
+        .extracted-text h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .extracted-text-content {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            white-space: pre-wrap;
+        }
+
+        /* PICO Tab */
+        .pico-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .pico-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            position: relative;
+        }
+
+        .pico-card-label {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+        }
+
+        .pico-card.p .pico-card-label { background: rgba(165,28,48,0.1); color: var(--primary); }
+        .pico-card.i .pico-card-label { background: rgba(74,95,140,0.1); color: var(--secondary); }
+        .pico-card.c .pico-card-label { background: rgba(230,126,34,0.1); color: var(--accent); }
+        .pico-card.o .pico-card-label { background: rgba(46,139,87,0.1); color: #2E8B57; }
+
+        .pico-card-content {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .pico-card-edit {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .pico-card-edit:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .dataset-suggestions {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .dataset-suggestions h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .suggestion-detail {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Statistical Analysis Tab */
+        .analysis-config {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .analysis-type-selector {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+        }
+
+        .analysis-type-selector h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .analysis-type-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .analysis-type-option:hover {
+            border-color: var(--secondary);
+        }
+
+        .analysis-type-option.selected {
+            border-color: var(--secondary);
+            background: rgba(74,95,140,0.05);
+        }
+
+        .analysis-type-option input[type="radio"] {
+            accent-color: var(--secondary);
+        }
+
+        .analysis-type-option label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .variable-config {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+        }
+
+        .variable-config h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .variable-config .form-group {
+            margin-bottom: 16px;
+        }
+
+        .results-table-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            overflow-x: auto;
+        }
+
+        .results-table-container h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .results-table th {
+            text-align: left;
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .results-table td {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .results-table tr:hover td {
+            background: var(--bg-secondary);
+        }
+
+        .results-table .significant {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .figures-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .figure-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+
+        .figure-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .figure-card canvas {
+            width: 100% !important;
+            height: 250px !important;
+        }
+
+        /* Output Tab */
+        .output-section {
+            margin-bottom: 32px;
+        }
+
+        .output-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .output-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .output-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .output-item h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .output-item p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        .output-item-preview {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 14px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .manuscript-preview {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 32px;
+        }
+
+        .manuscript-preview h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            border: none;
+            padding: 0;
+        }
+
+        .manuscript-preview .authors {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .manuscript-preview .abstract {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .manuscript-preview .abstract strong {
+            color: var(--text-primary);
+        }
+
+        /* Submission Tab */
+        .submission-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 36px;
+        }
+
+        .submission-card h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-bottom: 28px;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .check-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .check-icon.checked {
+            background: rgba(46,139,87,0.1);
+            color: #2E8B57;
+        }
+
+        .check-icon.pending {
+            background: rgba(136,136,160,0.1);
+            color: var(--text-muted);
+        }
+
+        .submission-status {
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .submission-status.ready {
+            background: rgba(46,139,87,0.1);
+            color: #2E8B57;
+            border: 1px solid rgba(46,139,87,0.2);
+        }
+
+        .submission-status.pending {
+            background: rgba(230,126,34,0.1);
+            color: var(--accent);
+            border: 1px solid rgba(230,126,34,0.2);
+        }
+
+        /* ============================================
+           LITERATURE PAGE
+           ============================================ */
+        .literature-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(165,28,48,0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        .search-results {
+            margin-top: 24px;
+        }
+
+        .search-result-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+
+        .search-result-item:hover {
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .result-authors {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .result-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+        }
+
+        .result-journal {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .result-year {
+            color: var(--text-muted);
+        }
+
+        .result-pmid {
+            color: var(--text-muted);
+        }
+
+        .result-actions {
+            margin-top: 12px;
+        }
+
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 3.7s forwards;
+            max-width: 400px;
+        }
+
+        .toast-success {
+            background: #2E8B57;
+            color: #fff;
+        }
+
+        .toast-error {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .toast-info {
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* ============================================
+           LOADING SPINNER
+           ============================================ */
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+        }
+
+        .spinner-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .inline-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        /* ============================================
+           EMPTY STATE
+           ============================================ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--bg-tertiary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           PICO EDIT MODAL
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .datasets-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .analysis-config {
+                grid-template-columns: 1fr;
+            }
+
+            .figures-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .nav-title {
+                display: none;
+            }
+
+            .nav-links {
+                gap: 4px;
+            }
+
+            .nav-link {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .datasets-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .workflow-steps {
+                flex-direction: column;
+            }
+
+            .workflow-arrow {
+                transform: rotate(90deg);
+                flex: 0 0 30px;
+                margin-bottom: 0;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pico-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                gap: 0;
+            }
+
+            .tab {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .project-detail-page,
+            .dashboard-page,
+            .new-project-page,
+            .literature-page {
+                padding: 24px 16px;
+            }
+
+            .form-card {
+                padding: 24px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .section {
+                padding: 48px 16px;
+            }
+
+            .hero {
+                padding: 60px 16px 48px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .datasets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 26px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+            }
+        }
+
+        /* ============================================
+           SCROLLBAR STYLES
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ============================================
+           STATUS BADGE STYLES
+           ============================================ */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 50px;
+        }
+
+        .status-badge.active { background: rgba(46,139,87,0.1); color: #2E8B57; }
+        .status-badge.completed { background: rgba(74,95,140,0.1); color: var(--secondary); }
+        .status-badge.draft { background: rgba(230,126,34,0.1); color: var(--accent); }
+        .status-badge.analyzing { background: rgba(165,28,48,0.1); color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SPINNER -->
+    <div id="spinnerOverlay" class="spinner-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- PICO EDIT MODAL -->
+    <div id="picoModal" class="modal-overlay hidden">
+        <div class="modal">
+            <h3 id="picoModalTitle">Edit PICO Element</h3>
+            <div class="form-group">
+                <label class="form-label" id="picoModalLabel">Value</label>
+                <textarea id="picoModalInput" class="form-textarea" rows="4"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closePicoModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="savePicoEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="nav-brand" onclick="navigateTo('#/')">
+            <div class="nav-logo">G2L</div>
+            <div class="nav-title">Global Aging <span>-></span> Lancet</div>
+        </div>
+        <div class="nav-links">
+            <a class="nav-link" data-page="home" onclick="navigateTo('#/')">Home</a>
+            <a class="nav-link" data-page="dashboard" onclick="navigateTo('#/dashboard')">Dashboard</a>
+            <a class="nav-link" data-page="literature" onclick="navigateTo('#/literature')">Literature</a>
+        </div>
+        <div class="nav-right">
+            <div class="nav-settings" onclick="showToast('Settings panel coming soon', 'info')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- ==========================================
+             HOME PAGE
+             ========================================== -->
+        <div id="page-home" class="page">
+            <section class="hero">
+                <div class="hero-content">
+                    <div class="hero-badge">Epidemiological Research Platform</div>
+                    <h1>Global Aging Data to<br><span class="highlight">Lancet Global Health</span></h1>
+                    <p class="hero-subtitle">AI-Powered Epidemiological Research Automation</p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">16</div>
+                            <div class="hero-stat-label">Studies</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">44</div>
+                            <div class="hero-stat-label">Countries</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">72</div>
+                            <div class="hero-stat-label">Surveys</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">365,694</div>
+                            <div class="hero-stat-label">Respondents</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-label">Core Capabilities</div>
+                    <h2 class="section-title">End-to-End Research Automation</h2>
+                    <p class="section-desc">From protocol upload to journal submission in six streamlined steps</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon upload">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        </div>
+                        <h3>Research Protocol Upload</h3>
+                        <p>Upload research protocols in PDF or Word format. Automatic text extraction and preprocessing for downstream analysis.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon pico">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </div>
+                        <h3>PICO Framework Analysis</h3>
+                        <p>AI-driven extraction of Population, Intervention, Comparison, and Outcome elements with automated dataset matching.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon stats">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </div>
+                        <h3>Statistical Analysis Engine</h3>
+                        <p>Kaplan-Meier survival analysis, Cox regression, and Fine-Gray competing risk models with automated variable selection.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon output">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        </div>
+                        <h3>Lancet Standard Output</h3>
+                        <p>Publication-ready tables and figures conforming to Lancet Global Health formatting requirements and style guidelines.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon manuscript">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </div>
+                        <h3>Manuscript Generation</h3>
+                        <p>Automated manuscript drafting following IMRaD structure with abstract, methods, results, and discussion sections.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon submit">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <h3>Submission Package</h3>
+                        <p>Complete submission package with cover letter, checklist compliance, and formatted supplementary materials ready for upload.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="workflow-section">
+                <div class="section-header">
+                    <div class="section-label">Research Workflow</div>
+                    <h2 class="section-title">Four Steps to Publication</h2>
+                    <p class="section-desc">Streamlined process from data to publication-ready manuscript</p>
+                </div>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="workflow-number">1</div>
+                        <div class="workflow-label">Upload</div>
+                        <div class="workflow-desc">Upload protocol and connect data sources</div>
+                    </div>
+                    <div class="workflow-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-number">2</div>
+                        <div class="workflow-label">Analyze</div>
+                        <div class="workflow-desc">PICO extraction and statistical modeling</div>
+                    </div>
+                    <div class="workflow-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-number">3</div>
+                        <div class="workflow-label">Generate</div>
+                        <div class="workflow-desc">Tables, figures, and manuscript creation</div>
+                    </div>
+                    <div class="workflow-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="workflow-number">4</div>
+                        <div class="workflow-label">Submit</div>
+                        <div class="workflow-desc">Package and submit to Lancet Global Health</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="datasets-section">
+                <div class="section-header">
+                    <div class="section-label">Integrated Datasets</div>
+                    <h2 class="section-title">Global Aging Survey Network</h2>
+                    <p class="section-desc">Harmonized data from the world's leading longitudinal aging studies</p>
+                </div>
+                <div class="datasets-grid">
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">HRS</div>
+                        <div class="dataset-name">Health and Retirement Study</div>
+                        <div class="dataset-country">United States</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">CHARLS</div>
+                        <div class="dataset-name">China Health and Retirement Longitudinal Study</div>
+                        <div class="dataset-country">China</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">ELSA</div>
+                        <div class="dataset-name">English Longitudinal Study of Ageing</div>
+                        <div class="dataset-country">England</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">SHARE</div>
+                        <div class="dataset-name">Survey of Health, Ageing and Retirement in Europe</div>
+                        <div class="dataset-country">Europe</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">MHAS</div>
+                        <div class="dataset-name">Mexican Health and Aging Study</div>
+                        <div class="dataset-country">Mexico</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">KLoSA</div>
+                        <div class="dataset-name">Korean Longitudinal Study of Aging</div>
+                        <div class="dataset-country">South Korea</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">JSTAR</div>
+                        <div class="dataset-name">Japanese Study of Aging and Retirement</div>
+                        <div class="dataset-country">Japan</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">TILDA</div>
+                        <div class="dataset-name">The Irish Longitudinal Study on Ageing</div>
+                        <div class="dataset-country">Ireland</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">LASI</div>
+                        <div class="dataset-name">Longitudinal Ageing Study in India</div>
+                        <div class="dataset-country">India</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">MARS</div>
+                        <div class="dataset-name">Malaysia Ageing and Retirement Survey</div>
+                        <div class="dataset-country">Malaysia</div>
+                    </div>
+                    <div class="dataset-card">
+                        <div class="dataset-abbr">CRELES</div>
+                        <div class="dataset-name">Costa Rica Longevity and Healthy Aging Study</div>
+                        <div class="dataset-country">Costa Rica</div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-brand">Global Aging Data to <span>Lancet Global Health</span></div>
+                    <div class="footer-divider"></div>
+                    <div class="footer-powered">Powered by <a href="#">MoKangMedical</a> | Data from <a href="https://g2aging.org">g2aging.org</a></div>
+                    <div class="footer-copy">AI-Powered Epidemiological Research Automation Platform</div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- ==========================================
+             DASHBOARD PAGE
+             ========================================== -->
+        <div id="page-dashboard" class="page">
+            <div class="dashboard-page">
+                <div class="page-header">
+                    <h1>Research Projects</h1>
+                    <button class="btn btn-primary" onclick="navigateTo('#/projects/new')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New Project
+                    </button>
+                </div>
+
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all" onclick="filterProjects('all', this)">All Projects</button>
+                    <button class="filter-btn" data-filter="active" onclick="filterProjects('active', this)">Active</button>
+                    <button class="filter-btn" data-filter="completed" onclick="filterProjects('completed', this)">Completed</button>
+                    <button class="filter-btn" data-filter="draft" onclick="filterProjects('draft', this)">Draft</button>
+                </div>
+
+                <div id="projectsGrid" class="projects-grid">
+                    <!-- Projects loaded dynamically -->
+                </div>
+
+                <div id="emptyProjects" class="empty-state" style="display:none;">
+                    <div class="empty-state-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>No Projects Found</h3>
+                    <p>Create your first research project to get started.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             NEW PROJECT PAGE
+             ========================================== -->
+        <div id="page-new-project" class="page">
+            <div class="new-project-page">
+                <div class="page-header">
+                    <h1>Create New Project</h1>
+                </div>
+
+                <div class="form-card">
+                    <form id="newProjectForm" onsubmit="createProject(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="projectTitle">Project Title</label>
+                            <input type="text" id="projectTitle" class="form-input" placeholder="Enter a descriptive project title" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="projectDesc">Description</label>
+                            <textarea id="projectDesc" class="form-textarea" placeholder="Describe the research objectives and methodology" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="projectType">Research Type</label>
+                            <select id="projectType" class="form-select" required>
+                                <option value="">Select research type</option>
+                                <option value="cohort">Cohort Study</option>
+                                <option value="cross-sectional">Cross-sectional Study</option>
+                                <option value="case-control">Case-control Study</option>
+                                <option value="meta-analysis">Meta-analysis</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="projectSource">Primary Data Source</label>
+                            <select id="projectSource" class="form-select" required>
+                                <option value="">Select data source</option>
+                                <option value="HRS">HRS - Health and Retirement Study</option>
+                                <option value="CHARLS">CHARLS - China Health and Retirement Longitudinal Study</option>
+                                <option value="ELSA">ELSA - English Longitudinal Study of Ageing</option>
+                                <option value="SHARE">SHARE - Survey of Health, Ageing and Retirement in Europe</option>
+                                <option value="MHAS">MHAS - Mexican Health and Aging Study</option>
+                                <option value="KLoSA">KLoSA - Korean Longitudinal Study of Aging</option>
+                                <option value="JSTAR">JSTAR - Japanese Study of Aging and Retirement</option>
+                                <option value="TILDA">TILDA - The Irish Longitudinal Study on Ageing</option>
+                                <option value="LASI">LASI - Longitudinal Ageing Study in India</option>
+                                <option value="MARS">MARS - Malaysia Ageing and Retirement Survey</option>
+                                <option value="CRELES">CRELES - Costa Rica Longevity and Healthy Aging Study</option>
+                                <option value="multi">Multi-dataset Analysis</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="navigateTo('#/dashboard')">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Create Project</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             PROJECT DETAIL PAGE
+             ========================================== -->
+        <div id="page-project-detail" class="page">
+            <div class="project-detail-page">
+                <div class="project-header">
+                    <h1 id="detailTitle">Loading...</h1>
+                    <div class="project-meta">
+                        <span id="detailType" class="status-badge"></span>
+                        <span id="detailStatus" class="status-badge"></span>
+                        <span id="detailDate"></span>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('overview', this)">Overview</div>
+                    <div class="tab" onclick="switchTab('upload', this)">Protocol Upload</div>
+                    <div class="tab" onclick="switchTab('pico', this)">PICO Analysis</div>
+                    <div class="tab" onclick="switchTab('analysis', this)">Statistical Analysis</div>
+                    <div class="tab" onclick="switchTab('output', this)">Output</div>
+                    <div class="tab" onclick="switchTab('submission', this)">Submission</div>
+                </div>
+
+                <!-- Tab 1: Overview -->
+                <div id="tab-overview" class="tab-content active">
+                    <div class="overview-grid">
+                        <div class="overview-card">
+                            <div class="overview-card-label">Files Uploaded</div>
+                            <div class="overview-card-value" id="statFiles">0</div>
+                            <div class="overview-card-desc">Protocol documents</div>
+                        </div>
+                        <div class="overview-card">
+                            <div class="overview-card-label">Analyses Run</div>
+                            <div class="overview-card-value" id="statAnalyses">0</div>
+                            <div class="overview-card-desc">Statistical models</div>
+                        </div>
+                        <div class="overview-card">
+                            <div class="overview-card-label">Tables Generated</div>
+                            <div class="overview-card-value" id="statTables">0</div>
+                            <div class="overview-card-desc">Publication-ready</div>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Project Information</h3>
+                        <div class="info-row">
+                            <span class="info-label">Title</span>
+                            <span class="info-value" id="infoTitle">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Research Type</span>
+                            <span class="info-value" id="infoType">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Data Source</span>
+                            <span class="info-value" id="infoSource">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Status</span>
+                            <span class="info-value" id="infoStatus">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Created</span>
+                            <span class="info-value" id="infoCreated">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Last Modified</span>
+                            <span class="info-value" id="infoModified">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Description</h3>
+                        <p id="infoDesc" style="font-size:14px; color:var(--text-secondary); line-height:1.8;">-</p>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Protocol Upload -->
+                <div id="tab-upload" class="tab-content">
+                    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx" multiple style="display:none" onchange="handleFileSelect(event)">
+                        <div class="upload-zone-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        </div>
+                        <h3>Drop files here or click to browse</h3>
+                        <p>Supported formats: PDF, DOC, DOCX</p>
+                    </div>
+
+                    <div id="fileList" class="file-list"></div>
+                    <div id="extractedText" class="extracted-text" style="display:none;">
+                        <h4>Extracted Text Preview</h4>
+                        <div class="extracted-text-content" id="extractedTextContent"></div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: PICO Analysis -->
+                <div id="tab-pico" class="tab-content">
+                    <div style="margin-bottom:24px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="font-size:18px; font-weight:700; color:var(--text-primary);">PICO Framework Analysis</h3>
+                            <p style="font-size:14px; color:var(--text-muted); margin-top:4px;">Extract research components from protocol</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="runPicoAnalysis()">
+                            Run PICO Analysis
+                        </button>
+                    </div>
+
+                    <div id="picoResults" style="display:none;">
+                        <div class="pico-cards">
+                            <div class="pico-card p">
+                                <div class="pico-card-label">Population</div>
+                                <div class="pico-card-content" id="picoPopulation">-</div>
+                                <div class="pico-card-edit" onclick="editPico('population')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </div>
+                            </div>
+                            <div class="pico-card i">
+                                <div class="pico-card-label">Intervention</div>
+                                <div class="pico-card-content" id="picoIntervention">-</div>
+                                <div class="pico-card-edit" onclick="editPico('intervention')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </div>
+                            </div>
+                            <div class="pico-card c">
+                                <div class="pico-card-label">Comparison</div>
+                                <div class="pico-card-content" id="picoComparison">-</div>
+                                <div class="pico-card-edit" onclick="editPico('comparison')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </div>
+                            </div>
+                            <div class="pico-card o">
+                                <div class="pico-card-label">Outcome</div>
+                                <div class="pico-card-content" id="picoOutcome">-</div>
+                                <div class="pico-card-edit" onclick="editPico('outcome')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dataset-suggestions">
+                            <h4>Recommended Datasets</h4>
+                            <div id="datasetSuggestions"></div>
+                        </div>
+                    </div>
+
+                    <div id="picoEmpty" class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </div>
+                        <h3>PICO Analysis Not Yet Run</h3>
+                        <p>Upload a protocol and run PICO analysis to extract research components.</p>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Statistical Analysis -->
+                <div id="tab-analysis" class="tab-content">
+                    <div class="analysis-config">
+                        <div class="analysis-type-selector">
+                            <h4>Analysis Type</h4>
+                            <div class="analysis-type-option selected" onclick="selectAnalysisType('kaplan-meier', this)">
+                                <input type="radio" name="analysisType" value="kaplan-meier" checked>
+                                <label>Kaplan-Meier Survival Analysis</label>
+                            </div>
+                            <div class="analysis-type-option" onclick="selectAnalysisType('cox-regression', this)">
+                                <input type="radio" name="analysisType" value="cox-regression">
+                                <label>Cox Proportional Hazards Regression</label>
+                            </div>
+                            <div class="analysis-type-option" onclick="selectAnalysisType('fine-gray', this)">
+                                <input type="radio" name="analysisType" value="fine-gray">
+                                <label>Fine-Gray Competing Risk Model</label>
+                            </div>
+                        </div>
+
+                        <div class="variable-config">
+                            <h4>Variable Configuration</h4>
+                            <div class="form-group">
+                                <label class="form-label" for="varExposure">Exposure Variable</label>
+                                <input type="text" id="varExposure" class="form-input" placeholder="e.g., diabetes status">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="varOutcome">Outcome Variable</label>
+                                <input type="text" id="varOutcome" class="form-input" placeholder="e.g., mortality">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="varCovariates">Covariates (comma-separated)</label>
+                                <input type="text" id="varCovariates" class="form-input" placeholder="e.g., age, sex, education, BMI">
+                            </div>
+                            <button class="btn btn-primary" onclick="runStatisticalAnalysis()" style="width:100%;">
+                                Run Analysis
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="analysisResults" style="display:none;">
+                        <div class="results-table-container">
+                            <h4>Analysis Results</h4>
+                            <table class="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Variable</th>
+                                        <th>HR/OR</th>
+                                        <th>95% CI</th>
+                                        <th>p-value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsTableBody"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="figures-container" id="analysisFigures"></div>
+                    </div>
+
+                    <div id="analysisEmpty" class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </div>
+                        <h3>No Analysis Results Yet</h3>
+                        <p>Configure variables and run statistical analysis to see results.</p>
+                    </div>
+                </div>
+
+                <!-- Tab 5: Output -->
+                <div id="tab-output" class="tab-content">
+                    <div class="output-section">
+                        <h3>Tables</h3>
+                        <div id="outputTables" class="output-items"></div>
+                        <div id="tablesEmpty" class="empty-state">
+                            <p>No tables generated yet. Run statistical analysis first.</p>
+                        </div>
+                    </div>
+
+                    <div class="output-section">
+                        <h3>Figures</h3>
+                        <div id="outputFigures" class="output-items"></div>
+                        <div id="figuresEmpty" class="empty-state">
+                            <p>No figures generated yet. Run statistical analysis first.</p>
+                        </div>
+                    </div>
+
+                    <div class="output-section">
+                        <h3>Manuscript Preview</h3>
+                        <div id="manuscriptPreview" style="display:none;">
+                            <div class="manuscript-preview">
+                                <h3 id="manuscriptTitle"></h3>
+                                <div class="authors" id="manuscriptAuthors"></div>
+                                <div class="abstract" id="manuscriptAbstract"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top:16px; display:flex; gap:12px;">
+                            <button class="btn btn-primary" onclick="generateManuscript()">Generate Manuscript</button>
+                        </div>
+                        <div id="manuscriptEmpty" class="empty-state">
+                            <p>Generate a manuscript from your analysis results.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 6: Submission -->
+                <div id="tab-submission" class="tab-content">
+                    <div class="submission-card">
+                        <h3>Lancet Global Health Submission Package</h3>
+
+                        <div id="submissionStatus" class="submission-status pending">
+                            Submission package not yet generated
+                        </div>
+
+                        <ul class="checklist" id="submissionChecklist">
+                            <li>
+                                <span class="check-icon pending" id="checkProtocol">&#9675;</span>
+                                Research Protocol Document
+                            </li>
+                            <li>
+                                <span class="check-icon pending" id="checkPico">&#9675;</span>
+                                PICO Framework Analysis Report
+                            </li>
+                            <li>
+                                <span class="check-icon pending" id="checkStats">&#9675;</span>
+                                Statistical Analysis Results
+                            </li>
+                            <li>
+                                <span class="check-icon pending" id="checkTables">&#9675;</span>
+                                Publication-Ready Tables
+                            </li>
+                            <li>
+                                <span class="check-icon pending" id="checkFigures">&#9675;</span>
+                                Figures and Visualizations
+                            </li>
+                            <li>
+                                <span class="check-icon pending" id="checkManuscript">&#9675;</span>
+                                Manuscript (IMRaD Format)
+                            </li>
+                            <li>
+                                <span class="check-icon pending" id="checkCover">&#9675;</span>
+                                Cover Letter
+                            </li>
+                            <li>
+                                <span class="check-icon pending" id="checkSupp">&#9675;</span>
+                                Supplementary Materials
+                            </li>
+                        </ul>
+
+                        <div style="display:flex; gap:12px;">
+                            <button class="btn btn-primary btn-lg" onclick="generateSubmission()">
+                                Generate Submission Package
+                            </button>
+                            <button class="btn btn-secondary btn-lg" id="downloadBtn" onclick="downloadSubmission()" style="display:none;">
+                                Download ZIP Package
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             LITERATURE PAGE
+             ========================================== -->
+        <div id="page-literature" class="page">
+            <div class="literature-page">
+                <div class="page-header">
+                    <h1>Literature Search</h1>
+                </div>
+
+                <div class="search-container">
+                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" class="search-input" id="pubmedSearch" placeholder="Search PubMed (e.g., aging mortality cohort study)" onkeydown="if(event.key==='Enter')searchPubmed()">
+                    <button class="btn btn-primary" style="position:absolute; right:8px; top:50%; transform:translateY(-50%);" onclick="searchPubmed()">Search</button>
+                </div>
+
+                <div id="searchResults" class="search-results"></div>
+
+                <div id="searchEmpty" class="empty-state">
+                    <div class="empty-state-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <h3>Search PubMed Literature</h3>
+                    <p>Search for relevant epidemiological studies, systematic reviews, and meta-analyses.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+    <script>
+        /* ============================================
+           APPLICATION STATE
+           ============================================ */
+        const AppState = {
+            currentPage: 'home',
+            currentProject: null,
+            currentProjectId: null,
+            currentTab: 'overview',
+            projects: [],
+            picoData: null,
+            analysisType: 'kaplan-meier',
+            editingPicoField: null,
+            charts: {},
+            filterStatus: 'all'
+        };
+
+        /* ============================================
+           UTILITY FUNCTIONS
+           ============================================ */
+        function showSpinner() {
+            document.getElementById('spinnerOverlay').classList.remove('hidden');
+        }
+
+        function hideSpinner() {
+            document.getElementById('spinnerOverlay').classList.add('hidden');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 4000);
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function getTypeBadgeClass(type) {
+            const map = {
+                'cohort': 'badge-cohort',
+                'cross-sectional': 'badge-cross',
+                'case-control': 'badge-case',
+                'meta-analysis': 'badge-meta'
+            };
+            return map[type] || 'badge-cohort';
+        }
+
+        function getTypeLabel(type) {
+            const map = {
+                'cohort': 'Cohort',
+                'cross-sectional': 'Cross-sectional',
+                'case-control': 'Case-control',
+                'meta-analysis': 'Meta-analysis'
+            };
+            return map[type] || type;
+        }
+
+        function getStatusClass(status) {
+            return `status-${status || 'active'}`;
+        }
+
+        /* ============================================
+           API HELPER
+           ============================================ */
+        async function apiCall(url, options = {}) {
+            try {
+                const defaultOptions = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                };
+
+                if (options.body && !(options.body instanceof FormData)) {
+                    defaultOptions.body = JSON.stringify(options.body);
+                } else if (options.body instanceof FormData) {
+                    delete defaultOptions.headers['Content-Type'];
+                }
+
+                const response = await fetch(url, {
+                    ...defaultOptions,
+                    ...options,
+                    headers: {
+                        ...defaultOptions.headers,
+                        ...options.headers,
+                    },
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.detail || errorData.message || `HTTP ${response.status}`);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return await response.json();
+                }
+                return response;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        /* ============================================
+           ROUTING
+           ============================================ */
+        function navigateTo(hash) {
+            window.location.hash = hash;
+        }
+
+        function handleRoute() {
+            const hash = window.location.hash || '#/';
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(l => l.classList.remove('active'));
+
+            if (hash === '#/' || hash === '#') {
+                showPage('home');
+                document.querySelector('[data-page="home"]')?.classList.add('active');
+            } else if (hash === '#/dashboard') {
+                showPage('dashboard');
+                document.querySelector('[data-page="dashboard"]')?.classList.add('active');
+                loadProjects();
+            } else if (hash === '#/projects/new') {
+                showPage('new-project');
+                document.querySelector('[data-page="dashboard"]')?.classList.add('active');
+            } else if (hash.startsWith('#/projects/') && hash !== '#/projects/new') {
+                const id = hash.split('/')[2];
+                AppState.currentProjectId = id;
+                showPage('project-detail');
+                document.querySelector('[data-page="dashboard"]')?.classList.add('active');
+                loadProjectDetail(id);
+            } else if (hash === '#/literature') {
+                showPage('literature');
+                document.querySelector('[data-page="literature"]')?.classList.add('active');
+            } else {
+                showPage('home');
+                document.querySelector('[data-page="home"]')?.classList.add('active');
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function showPage(pageId) {
+            const page = document.getElementById(`page-${pageId}`);
+            if (page) {
+                page.classList.add('active');
+                AppState.currentPage = pageId;
+            }
+        }
+
+        window.onhashchange = handleRoute;
+
+        /* ============================================
+           PROJECTS - DASHBOARD
+           ============================================ */
+        async function loadProjects() {
+            try {
+                showSpinner();
+                const projects = await apiCall('/api/projects');
+                AppState.projects = Array.isArray(projects) ? projects : [];
+                renderProjects();
+            } catch (error) {
+                showToast('Failed to load projects: ' + error.message, 'error');
+                renderProjectsEmpty();
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            const empty = document.getElementById('emptyProjects');
+
+            let filtered = AppState.projects;
+            if (AppState.filterStatus !== 'all') {
+                filtered = filtered.filter(p => p.status === AppState.filterStatus);
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            grid.innerHTML = filtered.map(project => `
+                <div class="project-card" onclick="navigateTo('#/projects/${project.id}')">
+                    <div class="project-card-header">
+                        <h3>${escapeHtml(project.title || 'Untitled Project')}</h3>
+                        <span class="project-type-badge ${getTypeBadgeClass(project.type)}">${getTypeLabel(project.type)}</span>
+                    </div>
+                    <p class="project-card-desc">${escapeHtml(project.description || 'No description')}</p>
+                    <div class="project-card-footer">
+                        <span class="project-status ${getStatusClass(project.status)}">
+                            <span class="status-dot"></span>
+                            ${(project.status || 'active').charAt(0).toUpperCase() + (project.status || 'active').slice(1)}
+                        </span>
+                        <span class="project-date">${formatDate(project.created_at)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderProjectsEmpty() {
+            document.getElementById('projectsGrid').innerHTML = '';
+            document.getElementById('emptyProjects').style.display = 'block';
+        }
+
+        function filterProjects(status, btn) {
+            AppState.filterStatus = status;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderProjects();
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /* ============================================
+           NEW PROJECT
+           ============================================ */
+        async function createProject(event) {
+            event.preventDefault();
+            const data = {
+                title: document.getElementById('projectTitle').value,
+                description: document.getElementById('projectDesc').value,
+                type: document.getElementById('projectType').value,
+                data_source: document.getElementById('projectSource').value,
+                status: 'active'
+            };
+
+            try {
+                showSpinner();
+                const project = await apiCall('/api/projects', {
+                    method: 'POST',
+                    body: data,
+                });
+                showToast('Project created successfully', 'success');
+                navigateTo(`#/projects/${project.id}`);
+            } catch (error) {
+                showToast('Failed to create project: ' + error.message, 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        /* ============================================
+           PROJECT DETAIL
+           ============================================ */
+        async function loadProjectDetail(id) {
+            try {
+                showSpinner();
+                const project = await apiCall(`/api/projects/${id}`);
+                AppState.currentProject = project;
+                renderProjectDetail(project);
+                loadProjectFiles(id);
+                loadProjectStats(id);
+            } catch (error) {
+                showToast('Failed to load project: ' + error.message, 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        function renderProjectDetail(project) {
+            document.getElementById('detailTitle').textContent = project.title || 'Untitled Project';
+            document.getElementById('detailType').textContent = getTypeLabel(project.type);
+            document.getElementById('detailType').className = `status-badge ${getTypeBadgeClass(project.type)}`;
+            document.getElementById('detailStatus').textContent = (project.status || 'active').charAt(0).toUpperCase() + (project.status || 'active').slice(1);
+            document.getElementById('detailStatus').className = `status-badge ${project.status || 'active'}`;
+            document.getElementById('detailDate').textContent = 'Created: ' + formatDate(project.created_at);
+
+            document.getElementById('infoTitle').textContent = project.title || '-';
+            document.getElementById('infoType').textContent = getTypeLabel(project.type);
+            document.getElementById('infoSource').textContent = project.data_source || '-';
+            document.getElementById('infoStatus').textContent = (project.status || 'active').charAt(0).toUpperCase() + (project.status || 'active').slice(1);
+            document.getElementById('infoCreated').textContent = formatDate(project.created_at);
+            document.getElementById('infoModified').textContent = formatDate(project.updated_at);
+            document.getElementById('infoDesc').textContent = project.description || 'No description provided.';
+
+            if (project.pico) {
+                AppState.picoData = project.pico;
+                renderPicoResults(project.pico);
+            }
+        }
+
+        async function loadProjectFiles(id) {
+            try {
+                const files = await apiCall(`/api/projects/${id}/files`);
+                if (Array.isArray(files)) {
+                    renderFileList(files);
+                    document.getElementById('statFiles').textContent = files.length;
+                }
+            } catch (error) {
+                console.log('Files endpoint not available or empty');
+            }
+        }
+
+        async function loadProjectStats(id) {
+            try {
+                const tables = await apiCall(`/api/projects/${id}/tables`);
+                if (Array.isArray(tables)) {
+                    document.getElementById('statTables').textContent = tables.length;
+                }
+            } catch (error) {
+                console.log('Tables endpoint not available');
+            }
+        }
+
+        /* ============================================
+           TAB SWITCHING
+           ============================================ */
+        function switchTab(tabName, tabEl) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            tabEl.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            AppState.currentTab = tabName;
+
+            if (tabName === 'output') {
+                loadOutputContent();
+            }
+            if (tabName === 'submission') {
+                updateSubmissionChecklist();
+            }
+        }
+
+        /* ============================================
+           FILE UPLOAD
+           ============================================ */
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                uploadFiles(files);
+            }
+        }
+
+        function setupDropZone() {
+            const zone = document.getElementById('uploadZone');
+            if (!zone) return;
+
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('dragover');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('dragover');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    uploadFiles(files);
+                }
+            });
+        }
+
+        async function uploadFiles(files) {
+            const projectId = AppState.currentProjectId;
+            if (!projectId) return;
+
+            for (let file of files) {
+                try {
+                    showSpinner();
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    await fetch(`/api/projects/${projectId}/upload`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    showToast(`Uploaded: ${file.name}`, 'success');
+                } catch (error) {
+                    showToast(`Failed to upload ${file.name}`, 'error');
+                } finally {
+                    hideSpinner();
+                }
+            }
+
+            loadProjectFiles(projectId);
+        }
+
+        function renderFileList(files) {
+            const container = document.getElementById('fileList');
+            container.innerHTML = files.map(file => `
+                <div class="file-item">
+                    <div class="file-item-info">
+                        <div class="file-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        </div>
+                        <div>
+                            <div class="file-name">${escapeHtml(file.filename || file.name || 'Unnamed file')}</div>
+                            <div class="file-size">${file.size ? (file.size / 1024).toFixed(1) + ' KB' : ''}</div>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="extractText('${file.id || file.filename}')">Extract Text</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function extractText(fileId) {
+            const projectId = AppState.currentProjectId;
+            try {
+                showSpinner();
+                const result = await apiCall(`/api/projects/${projectId}/extract`, {
+                    method: 'POST',
+                    body: { file_id: fileId },
+                });
+
+                const textDiv = document.getElementById('extractedText');
+                textDiv.style.display = 'block';
+                document.getElementById('extractedTextContent').textContent = result.text || result.content || 'No text extracted.';
+                showToast('Text extracted successfully', 'success');
+            } catch (error) {
+                showToast('Failed to extract text: ' + error.message, 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        /* ============================================
+           PICO ANALYSIS
+           ============================================ */
+        async function runPicoAnalysis() {
+            const projectId = AppState.currentProjectId;
+            if (!projectId) return;
+
+            try {
+                showSpinner();
+                const result = await apiCall(`/api/projects/${projectId}/pico`, {
+                    method: 'POST',
+                });
+
+                AppState.picoData = result;
+                renderPicoResults(result);
+                showToast('PICO analysis completed', 'success');
+            } catch (error) {
+                showToast('PICO analysis failed: ' + error.message, 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        function renderPicoResults(data) {
+            document.getElementById('picoResults').style.display = 'block';
+            document.getElementById('picoEmpty').style.display = 'none';
+
+            document.getElementById('picoPopulation').textContent = data.population || 'Not specified';
+            document.getElementById('picoIntervention').textContent = data.intervention || 'Not specified';
+            document.getElementById('picoComparison').textContent = data.comparison || 'Not specified';
+            document.getElementById('picoOutcome').textContent = data.outcome || 'Not specified';
+
+            if (data.datasets && data.datasets.length > 0) {
+                const suggestionsDiv = document.getElementById('datasetSuggestions');
+                suggestionsDiv.innerHTML = data.datasets.map(ds => `
+                    <div class="suggestion-item">
+                        <div>
+                            <div class="suggestion-name">${escapeHtml(ds.name || ds)}</div>
+                            <div class="suggestion-detail">${escapeHtml(ds.reason || ds.detail || '')}</div>
+                        </div>
+                        <button class="btn btn-sm btn-outline">Select</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function editPico(field) {
+            AppState.editingPicoField = field;
+            const data = AppState.picoData || {};
+            const value = data[field] || '';
+
+            document.getElementById('picoModalTitle').textContent = `Edit ${field.charAt(0).toUpperCase() + field.slice(1)}`;
+            document.getElementById('picoModalLabel').textContent = `${field.charAt(0).toUpperCase() + field.slice(1)} Value`;
+            document.getElementById('picoModalInput').value = value;
+            document.getElementById('picoModal').classList.remove('hidden');
+        }
+
+        function closePicoModal() {
+            document.getElementById('picoModal').classList.add('hidden');
+            AppState.editingPicoField = null;
+        }
+
+        async function savePicoEdit() {
+            const field = AppState.editingPicoField;
+            const value = document.getElementById('picoModalInput').value;
+            const projectId = AppState.currentProjectId;
+
+            if (!field || !projectId) return;
+
+            if (!AppState.picoData) {
+                AppState.picoData = {};
+            }
+            AppState.picoData[field] = value;
+
+            try {
+                await apiCall(`/api/projects/${projectId}/pico`, {
+                    method: 'POST',
+                    body: AppState.picoData,
+                });
+
+                renderPicoResults(AppState.picoData);
+                closePicoModal();
+                showToast('PICO element updated', 'success');
+            } catch (error) {
+                showToast('Failed to update: ' + error.message, 'error');
+            }
+        }
+
+        /* ============================================
+           STATISTICAL ANALYSIS
+           ============================================ */
+        function selectAnalysisType(type, el) {
+            AppState.analysisType = type;
+            document.querySelectorAll('.analysis-type-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            el.querySelector('input[type="radio"]').checked = true;
+        }
+
+        async function runStatisticalAnalysis() {
+            const projectId = AppState.currentProjectId;
+            if (!projectId) return;
+
+            const config = {
+                type: AppState.analysisType,
+                exposure: document.getElementById('varExposure').value,
+                outcome: document.getElementById('varOutcome').value,
+                covariates: document.getElementById('varCovariates').value.split(',').map(s => s.trim()).filter(Boolean),
+            };
+
+            try {
+                showSpinner();
+                const result = await apiCall(`/api/projects/${projectId}/analyze`, {
+                    method: 'POST',
+                    body: config,
+                });
+
+                renderAnalysisResults(result);
+                showToast('Statistical analysis completed', 'success');
+            } catch (error) {
+                showToast('Analysis failed: ' + error.message, 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        function renderAnalysisResults(data) {
+            document.getElementById('analysisResults').style.display = 'block';
+            document.getElementById('analysisEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('resultsTableBody');
+            if (data.results && Array.isArray(data.results)) {
+                tbody.innerHTML = data.results.map(r => `
+                    <tr>
+                        <td>${escapeHtml(r.variable || r.name || '-')}</td>
+                        <td>${r.hr || r.or || r.estimate || '-'}</td>
+                        <td>${r.ci || r.ci_lower && r.ci_upper ? `${r.ci_lower} - ${r.ci_upper}` : '-'}</td>
+                        <td class="${r.p_value < 0.05 ? 'significant' : ''}">${r.p_value !== undefined ? r.p_value.toFixed(4) : '-'}</td>
+                    </tr>
+                `).join('');
+            }
+
+            if (data.figures && Array.isArray(data.figures)) {
+                renderAnalysisFigures(data.figures);
+            }
+        }
+
+        function renderAnalysisFigures(figures) {
+            const container = document.getElementById('analysisFigures');
+            container.innerHTML = '';
+
+            figures.forEach((fig, index) => {
+                const card = document.createElement('div');
+                card.className = 'figure-card';
+                card.innerHTML = `
+                    <h4>${escapeHtml(fig.title || `Figure ${index + 1}`)}</h4>
+                    <canvas id="analysisChart${index}"></canvas>
+                `;
+                container.appendChild(card);
+
+                if (fig.data) {
+                    setTimeout(() => {
+                        createChart(`analysisChart${index}`, fig);
+                    }, 100);
+                }
+            });
+        }
+
+        function createChart(canvasId, figData) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            if (AppState.charts[canvasId]) {
+                AppState.charts[canvasId].destroy();
+            }
+
+            const type = figData.chart_type || 'line';
+            const config = {
+                type: type,
+                data: figData.data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { family: 'Inter', size: 12 },
+                                padding: 16
+                            }
+                        }
+                    },
+                    scales: figData.options?.scales || {}
+                }
+            };
+
+            AppState.charts[canvasId] = new Chart(ctx, config);
+        }
+
+        /* ============================================
+           OUTPUT
+           ============================================ */
+        async function loadOutputContent() {
+            const projectId = AppState.currentProjectId;
+            if (!projectId) return;
+
+            try {
+                const tables = await apiCall(`/api/projects/${projectId}/tables`);
+                renderOutputTables(Array.isArray(tables) ? tables : []);
+            } catch (error) {
+                console.log('No tables available');
+            }
+
+            try {
+                const figures = await apiCall(`/api/projects/${projectId}/figures`);
+                renderOutputFigures(Array.isArray(figures) ? figures : []);
+            } catch (error) {
+                console.log('No figures available');
+            }
+        }
+
+        function renderOutputTables(tables) {
+            const container = document.getElementById('outputTables');
+            const empty = document.getElementById('tablesEmpty');
+
+            if (tables.length === 0) {
+                container.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            container.innerHTML = tables.map((table, i) => `
+                <div class="output-item">
+                    <h4>${escapeHtml(table.title || `Table ${i + 1}`)}</h4>
+                    <p>${escapeHtml(table.description || 'Publication-ready table')}</p>
+                    <div class="output-item-preview">${table.preview || table.html || 'Preview not available'}</div>
+                    <button class="btn btn-sm btn-primary" onclick="downloadTable('${table.id || i}')">Download</button>
+                </div>
+            `).join('');
+        }
+
+        function renderOutputFigures(figures) {
+            const container = document.getElementById('outputFigures');
+            const empty = document.getElementById('figuresEmpty');
+
+            if (figures.length === 0) {
+                container.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            container.innerHTML = figures.map((fig, i) => `
+                <div class="output-item">
+                    <h4>${escapeHtml(fig.title || `Figure ${i + 1}`)}</h4>
+                    <p>${escapeHtml(fig.description || 'Generated visualization')}</p>
+                    <button class="btn btn-sm btn-primary" onclick="downloadFigure('${fig.id || i}')">Download</button>
+                </div>
+            `).join('');
+        }
+
+        async function downloadTable(tableId) {
+            const projectId = AppState.currentProjectId;
+            try {
+                const response = await fetch(`/api/projects/${projectId}/tables/${tableId}/download`);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `table_${tableId}.xlsx`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showToast('Table downloaded', 'success');
+            } catch (error) {
+                showToast('Download failed: ' + error.message, 'error');
+            }
+        }
+
+        async function downloadFigure(figId) {
+            const projectId = AppState.currentProjectId;
+            try {
+                const response = await fetch(`/api/projects/${projectId}/figures/${figId}/download`);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `figure_${figId}.png`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showToast('Figure downloaded', 'success');
+            } catch (error) {
+                showToast('Download failed: ' + error.message, 'error');
+            }
+        }
+
+        /* ============================================
+           MANUSCRIPT GENERATION
+           ============================================ */
+        async function generateManuscript() {
+            const projectId = AppState.currentProjectId;
+            if (!projectId) return;
+
+            try {
+                showSpinner();
+                const result = await apiCall(`/api/projects/${projectId}/manuscript`, {
+                    method: 'POST',
+                });
+
+                renderManuscript(result);
+                showToast('Manuscript generated successfully', 'success');
+            } catch (error) {
+                showToast('Manuscript generation failed: ' + error.message, 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        function renderManuscript(data) {
+            document.getElementById('manuscriptPreview').style.display = 'block';
+            document.getElementById('manuscriptEmpty').style.display = 'none';
+
+            document.getElementById('manuscriptTitle').textContent = data.title || 'Untitled Manuscript';
+            document.getElementById('manuscriptAuthors').textContent = data.authors || 'Authors not specified';
+            document.getElementById('manuscriptAbstract').innerHTML = data.abstract || 'Abstract not available.';
+        }
+
+        /* ============================================
+           SUBMISSION PACKAGE
+           ============================================ */
+        function updateSubmissionChecklist() {
+            const project = AppState.currentProject;
+            if (!project) return;
+
+            const checks = {
+                checkProtocol: project.files && project.files.length > 0,
+                checkPico: project.pico !== null && project.pico !== undefined,
+                checkStats: project.analyses && project.analyses.length > 0,
+                checkTables: project.tables && project.tables.length > 0,
+                checkFigures: project.figures && project.figures.length > 0,
+                checkManuscript: project.manuscript !== null && project.manuscript !== undefined,
+                checkCover: project.cover_letter !== null && project.cover_letter !== undefined,
+                checkSupp: project.supplementary !== null && project.supplementary !== undefined,
+            };
+
+            Object.entries(checks).forEach(([id, done]) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.className = `check-icon ${done ? 'checked' : 'pending'}`;
+                    el.innerHTML = done ? '&#10003;' : '&#9675;';
+                }
+            });
+
+            const allDone = Object.values(checks).some(v => v);
+            const statusEl = document.getElementById('submissionStatus');
+            if (allDone) {
+                statusEl.className = 'submission-status ready';
+                statusEl.textContent = 'Submission package partially ready';
+            }
+        }
+
+        async function generateSubmission() {
+            const projectId = AppState.currentProjectId;
+            if (!projectId) return;
+
+            try {
+                showSpinner();
+                const result = await apiCall(`/api/projects/${projectId}/submission`, {
+                    method: 'POST',
+                });
+
+                document.getElementById('submissionStatus').className = 'submission-status ready';
+                document.getElementById('submissionStatus').textContent = 'Submission package generated successfully';
+                document.getElementById('downloadBtn').style.display = 'inline-flex';
+
+                if (result.checklist) {
+                    Object.entries(result.checklist).forEach(([key, done]) => {
+                        const el = document.getElementById(`check${key.charAt(0).toUpperCase() + key.slice(1)}`);
+                        if (el) {
+                            el.className = `check-icon ${done ? 'checked' : 'pending'}`;
+                            el.innerHTML = done ? '&#10003;' : '&#9675;';
+                        }
+                    });
+                }
+
+                showToast('Submission package generated', 'success');
+            } catch (error) {
+                showToast('Failed to generate submission: ' + error.message, 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        async function downloadSubmission() {
+            const projectId = AppState.currentProjectId;
+            if (!projectId) return;
+
+            try {
+                showSpinner();
+                const response = await fetch(`/api/projects/${projectId}/submission/download`);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `submission_package_${projectId}.zip`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showToast('Submission package downloaded', 'success');
+            } catch (error) {
+                showToast('Download failed: ' + error.message, 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        /* ============================================
+           LITERATURE SEARCH
+           ============================================ */
+        async function searchPubmed() {
+            const query = document.getElementById('pubmedSearch').value.trim();
+            if (!query) {
+                showToast('Please enter a search query', 'error');
+                return;
+            }
+
+            try {
+                showSpinner();
+                const result = await apiCall(`/api/pubmed/search?q=${encodeURIComponent(query)}`);
+                renderSearchResults(Array.isArray(result) ? result : result.results || []);
+            } catch (error) {
+                showToast('Search failed: ' + error.message, 'error');
+                renderSearchResults([]);
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        function renderSearchResults(results) {
+            const container = document.getElementById('searchResults');
+            const empty = document.getElementById('searchEmpty');
+
+            if (results.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>No results found</h3><p>Try different search terms.</p></div>';
+                empty.style.display = 'none';
+                return;
+            }
+
+            empty.style.display = 'none';
+            container.innerHTML = results.map(item => `
+                <div class="search-result-item">
+                    <div class="result-title">${escapeHtml(item.title || 'Untitled')}</div>
+                    <div class="result-authors">${escapeHtml(item.authors || 'Unknown authors')}</div>
+                    <div class="result-meta">
+                        <span class="result-journal">${escapeHtml(item.journal || '')}</span>
+                        <span class="result-year">${item.year || ''}</span>
+                        <span class="result-pmid">PMID: ${item.pmid || ''}</span>
+                    </div>
+                    <div class="result-actions">
+                        <button class="btn btn-sm btn-outline" onclick="addToProject('${item.pmid || ''}', '${escapeHtml(item.title || '')}')">Add to Project</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function addToProject(pmid, title) {
+            const projectId = AppState.currentProjectId;
+            if (!projectId) {
+                showToast('No project selected. Open a project first.', 'error');
+                return;
+            }
+
+            try {
+                await apiCall(`/api/projects/${projectId}/literature`, {
+                    method: 'POST',
+                    body: { pmid: pmid, title: title },
+                });
+                showToast('Added to project', 'success');
+            } catch (error) {
+                showToast('Failed to add: ' + error.message, 'error');
+            }
+        }
+
+        /* ============================================
+           INITIALIZATION
+           ============================================ */
+        document.addEventListener('DOMContentLoaded', () => {
+            handleRoute();
+            setupDropZone();
+        });
+    </script>
+</body>
+</html>

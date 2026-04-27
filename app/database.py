@@ -107,7 +107,7 @@ def init_db():
             methods TEXT DEFAULT '',
             results TEXT DEFAULT '',
             discussion TEXT DEFAULT '',
-            references TEXT DEFAULT '',
+            refs TEXT DEFAULT '',
             created_at TEXT NOT NULL DEFAULT (datetime('now')),
             updated_at TEXT NOT NULL DEFAULT (datetime('now')),
             FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
@@ -325,28 +325,34 @@ def save_manuscript(project_id: int, title: str, abstract: str, introduction: st
     existing = conn.execute("SELECT id FROM manuscripts WHERE project_id = ?", (project_id,)).fetchone()
     if existing:
         conn.execute(
-            "UPDATE manuscripts SET title=?, abstract=?, introduction=?, methods=?, results=?, discussion=?, references=?, updated_at=? WHERE project_id=?",
+            "UPDATE manuscripts SET title=?, abstract=?, introduction=?, methods=?, results=?, discussion=?, refs=?, updated_at=? WHERE project_id=?",
             (title, abstract, introduction, methods, results, discussion, references, now, project_id)
         )
         conn.commit()
         manuscript_id = existing["id"]
     else:
         cursor = conn.execute(
-            "INSERT INTO manuscripts (project_id, title, abstract, introduction, methods, results, discussion, references, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO manuscripts (project_id, title, abstract, introduction, methods, results, discussion, refs, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (project_id, title, abstract, introduction, methods, results, discussion, references, now, now)
         )
         conn.commit()
         manuscript_id = cursor.lastrowid
     row = conn.execute("SELECT * FROM manuscripts WHERE id = ?", (manuscript_id,)).fetchone()
     conn.close()
-    return row_to_dict(row)
+    result = row_to_dict(row)
+    if result and "refs" in result:
+        result["references"] = result.pop("refs")
+    return result
 
 
 def get_manuscript(project_id: int) -> Optional[Dict[str, Any]]:
     conn = get_db()
     row = conn.execute("SELECT * FROM manuscripts WHERE project_id = ? ORDER BY updated_at DESC LIMIT 1", (project_id,)).fetchone()
     conn.close()
-    return row_to_dict(row) if row else None
+    result = row_to_dict(row) if row else None
+    if result and "refs" in result:
+        result["references"] = result.pop("refs")
+    return result
 
 
 # Citations

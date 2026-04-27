@@ -408,7 +408,7 @@ def _fallback_cox_regression(data: Dict[str, Any], covariates: List[str] = None)
 
         rate1 = events[group1_mask].sum() / times[group1_mask].sum()
         rate0 = events[group0_mask].sum() / times[group0_mask].sum()
-        hr = rate1 / rate0 if rate0 > 0 else float("inf")
+        hr = rate1 / rate0 if rate0 > 0 else 999.99
 
         # Approximate CI
         log_hr = np.log(hr) if hr > 0 else 0
@@ -465,7 +465,7 @@ def run_fine_gray(data: Dict[str, Any], covariates: List[str] = None) -> Dict[st
 
         rate1 = events_cs[group1].sum() / times_cs[group1].sum() if times_cs[group1].sum() > 0 else 0
         rate0 = events_cs[group0].sum() / times_cs[group0].sum() if times_cs[group0].sum() > 0 else 0
-        shr = rate1 / rate0 if rate0 > 0 else float("inf")
+        shr = rate1 / rate0 if rate0 > 0 else 999.99
 
         log_shr = np.log(shr) if shr > 0 else 0
         e1 = events_cs[group1].sum()
